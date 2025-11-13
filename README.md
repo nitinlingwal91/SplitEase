@@ -20,17 +20,15 @@ SplitEase is a modern, Django-based web application designed to simplify expense
 
 ## ✨ Features
 
-- User registration and authentication with email verification.
+- User registration and authentication
 - Group creation and management with role-based access.
 - Expense logging with flexible splitting methods (equal, itemized, percentage).
 - Automatic balance and settlement calculation to minimize transactions.
 - Real-time group chat powered by WebSockets.
 - Budget tracking with alerts to keep spending in check.
-- Multi-language support for global users.
 - User profile management with optional information and photo.
 - Secure password reset workflow via email.
 - Responsive design including light and dark mode themes.
-
 ---
 
 ## 🛠 Technology Stack
@@ -57,13 +55,6 @@ SplitEase is a modern, Django-based web application designed to simplify expense
 - **python-dotenv 1.0.0** - Environment variables management
 - **django-cors-headers 4.0.0** - CORS support
 - **django-filter 23.2** - Query filtering
-
-### Deployment
-- **Render.com** - [Platform](https://render.com) - Free Django hosting
-- **Heroku** - [Platform](https://www.heroku.com) - Alternative hosting
-- **AWS** - [Free Tier](https://aws.amazon.com/free/) - Enterprise hosting
-- **PythonAnywhere** - [Platform](https://www.pythonanywhere.com) - Python hosting
-
 ---
 
 ## 📦 Prerequisites
@@ -480,4 +471,5 @@ git push -u origin main
 **Status:** Active Development
 
 © 2025 SplitEase. All rights reserved.
+
 
