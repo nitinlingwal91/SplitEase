@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile - SplitEase{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        
+        <!-- Profile Header Card -->
+        <div class="card shadow mb-4 border-0">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-3 text-center">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="{{ user.name }}" 
+                                 class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                        {% else %}
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" 
+                                 style="width: 120px; height: 120px; font-size: 2.5rem; margin: 0 auto;">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <h2 class="mb-1">{{ user.name }}</h2>
+                        <p class="text-muted mb-2">
+                            <i class="bi bi-envelope"></i> {{ user.email }}
+                        </p>
+                        {% if user.phone_number %}
+                        <p class="text-muted mb-2">
+                            <i class="bi bi-telephone"></i> {{ user.phone_number }}
+                        </p>
+                        {% endif %}
+                        {% if age %}
+                        <p class="text-muted mb-2">
+                            <i class="bi bi-calendar"></i> {{ age }} years old
+                        </p>
+                        {% endif %}
+                        <p class="text-muted mb-0">
+                            <i class="bi bi-calendar-check"></i> 
+                            Joined {{ user.date_joined|date:"M d, Y" }}
+                        </p>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <a href="{% url 'users:profile_update' %}" class="btn btn-primary mb-2">
+                            <i class="bi bi-pencil"></i> Edit Profile
+                        </a>
+                        <a href="{% url 'users:change_password' %}" class="btn btn-warning">
+                            <i class="bi bi-key"></i> Change Password
+                        </a>
+                    </div>
+                </div>
+                {% if user.bio %}
+                <hr>
+                <p class="text-muted mb-0">
+                    <strong>Bio:</strong> {{ user.bio }}
+                </p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <div style="font-size: 2rem; color: #007bff; margin-bottom: 10px;">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <h6 class="text-muted mb-1">Groups</h6>
+                        <h3 class="mb-0">{{ total_groups }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <div style="font-size: 2rem; color: #28a745; margin-bottom: 10px;">
+                            <i class="bi bi-receipt"></i>
+                        </div>
+                        <h6 class="text-muted mb-1">Expenses Created</h6>
+                        <h3 class="mb-0">{{ total_expenses }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <div style="font-size: 2rem; color: #ffc107; margin-bottom: 10px;">
+                            <i class="bi bi-wallet2"></i>
+                        </div>
+                        <h6 class="text-muted mb-1">Total Shared</h6>
+                        <h3 class="mb-0">{{ total_shared }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Information Cards -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-info-circle"></i> Account Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <small class="text-muted">Full Name</small>
+                                <p class="mb-0"><strong>{{ user.name }}</strong></p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Email</small>
+                                <p class="mb-0"><strong>{{ user.email }}</strong></p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <small class="text-muted">Phone Number</small>
+                                <p class="mb-0"><strong>{{ user.phone_number|default:"Not provided" }}</strong></p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Date of Birth</small>
+                                <p class="mb-0">
+                                    <strong>
+                                        {% if user.date_of_birth %}
+                                            {{ user.date_of_birth|date:"M d, Y" }}
+                                        {% else %}
+                                            Not provided
+                                        {% endif %}
+                                    </strong>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-muted">Account Status</small>
+                                <p class="mb-0">
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> Active
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Member Since</small>
+                                <p class="mb-0"><strong>{{ user.date_joined|date:"M d, Y" }}</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-shield-check"></i> Security
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <small class="text-muted">Email Verification</small>
+                            <p class="mb-0">
+                                {% if user.email_verified %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> Verified
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-warning">
+                                        <i class="bi bi-exclamation-circle"></i> Not Verified
+                                    </span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted">Last Login</small>
+                            <p class="mb-0">
+                                <strong>
+                                    {% if user.last_login %}
+                                        {{ user.last_login|date:"M d, Y H:i" }}
+                                    {% else %}
+                                        This is your first login
+                                    {% endif %}
+                                </strong>
+                            </p>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted">Account Type</small>
+                            <p class="mb-0">
+                                {% if user.is_superuser %}
+                                    <span class="badge bg-danger">Administrator</span>
+                                {% elif user.is_staff %}
+                                    <span class="badge bg-info">Staff</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">User</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <hr>
+                        <a href="{% url 'users:change_password' %}" class="btn btn-warning w-100">
+                            <i class="bi bi-key"></i> Change Password
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow-sm border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-exclamation-triangle"></i> Danger Zone
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-3">
+                            Once you delete your account, there is no going back. All your data will be permanently deleted.
+                        </p>
+                        <a href="{% url 'users:delete_account' %}" class="btn btn-danger" 
+                           onclick="return confirm('Are you absolutely sure? This cannot be undone!')">
+                            <i class="bi bi-trash"></i> Delete My Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Link -->
+        <div class="mb-4">
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: 1px solid #e0e0e0;
+    }
+
+    [data-bs-theme="dark"] .card {
+        background-color: #1e1e1e;
+        border-color: #495057;
+        color: #e9ecef;
+    }
+
+    [data-bs-theme="dark"] .card-header {
+        background-color: #2b2b2b !important;
+        border-color: #495057;
+    }
+
+    [data-bs-theme="dark"] .text-muted {
+        color: #adb5bd !important;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+</style>
+{% endblock %}
+

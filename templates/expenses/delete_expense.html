@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Expense - SplitEase{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow border-danger">
+            <div class="card-body">
+                <h3 class="text-danger mb-4">
+                    <i class="bi bi-exclamation-triangle"></i> Confirm Deletion
+                </h3>
+                
+                <p>Are you sure you want to delete the following expense?</p>
+                
+                <div class="alert alert-warning">
+                    <strong>Description:</strong> {{ expense.description }}<br>
+                    <strong>Amount:</strong> {{ expense.amount }} {{ expense.group.currency }}<br>
+                    <strong>Date:</strong> {{ expense.date|date:"F d, Y" }}<br>
+                    <strong>Paid by:</strong> {{ expense.payer.name }}
+                </div>
+                
+                <p class="text-danger">
+                    <i class="bi bi-info-circle"></i> 
+                    <strong>Warning:</strong> This action cannot be undone. All participant shares and balance calculations will be recalculated.
+                </p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Yes, Delete Expense
+                        </button>
+                        <a href="{% url 'expenses:detail' expense.expense_id %}" 
+                           class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

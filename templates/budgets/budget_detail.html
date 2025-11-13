@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ budget.name }} - Budget Details{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="bi bi-graph-up"></i> {{ budget.name }}</h2>
+        <p class="text-muted">
+            {{ budget.get_period_display }} | 
+            {{ budget.start_date|date:"M d, Y" }} to {{ budget.end_date|date:"M d, Y" }}
+        </p>
+        <a href="{% url 'budgets:list' group.group_id %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Budgets
+        </a>
+    </div>
+</div>
+
+<!-- Alerts Section -->
+{% if alerts %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">
+                <i class="bi bi-exclamation-triangle"></i> Budget Alerts
+            </h4>
+            {% for alert in alerts %}
+            <div class="alert alert-{% if alert.alert_type == 'over' %}danger{% else %}info{% endif %} mb-2">
+                <strong>{{ alert.get_alert_type_display }}:</strong> {{ alert.message }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Budget Items -->
+<div class="row">
+    {% for item in items %}
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-tag"></i> {{ item.category.name }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- Budget Info -->
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="mb-1">
+                                <small class="text-muted">Budget:</small>
+                            </p>
+                            <h5>{{ item.budget_amount }} {{ group.currency }}</h5>
+                        </div>
+                        <div class="col-6">
+                            <p class="mb-1">
+                                <small class="text-muted">Spent:</small>
+                            </p>
+                            <h5>{{ item.spent_amount }} {{ group.currency }}</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><small>Progress</small></span>
+                        <span>
+                            <small>
+                                {% widthratio item.spent_amount item.budget_amount 100 %}%
+                            </small>
+                        </span>
+                    </div>
+                    
+                    <div class="progress">
+                        {% widthratio item.spent_amount item.budget_amount 100 as percentage %}
+                        
+                        {% if item.is_over_budget %}
+                            <div class="progress-bar bg-danger" style="width: 100%"></div>
+                        {% elif percentage >= item.alert_percentage %}
+                            <div class="progress-bar bg-warning" style="width: {{ percentage }}%"></div>
+                        {% else %}
+                            <div class="progress-bar bg-success" style="width: {{ percentage }}%"></div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Status -->
+                {% if item.is_over_budget %}
+                <div class="alert alert-danger mb-0">
+                    <strong>Over Budget!</strong>
+                    <br>
+                    Exceeded by: {{ item.spent_amount|add:"-"|add:item.budget_amount }} {{ group.currency }}
+                </div>
+                {% elif percentage >= item.alert_percentage %}
+                <div class="alert alert-warning mb-0">
+                    <strong>Budget Alert!</strong>
+                    <br>
+                    {{ percentage }}% of budget spent
+                </div>
+                {% else %}
+                <div class="alert alert-success mb-0">
+                    <strong>On Track</strong>
+                    <br>
+                    Remaining: {{ item.remaining_budget }} {{ group.currency }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- No Items -->
+{% if not items %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> No budget items found. Create one to get started.
+</div>
+{% endif %}
+{% endblock %}

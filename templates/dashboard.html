@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - SplitEase{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="bi bi-speedometer2"></i> Welcome, {{ user.name }}!
+        </h1>
+    </div>
+</div>
+
+<!-- Summary Statistics -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h6 class="card-title">Total Expenses</h6>
+                <h3>{{ total_expenses|floatformat:2 }} (INR)</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h6 class="card-title">Active Groups</h6>
+                <h3>{{ total_groups }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h6 class="card-title">Total Members</h6>
+                <h3>{{ total_members }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <h6 class="card-title">Settlement Status</h6>
+                <h3>Pending</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts in Single Row (Adjusted Size) -->
+<div class="row g-4 mb-4">
+    <!-- Pie Chart: Expense by Category -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="bi bi-pie-chart"></i> Expenses by Category
+                </h6>
+                <canvas id="expenseCategoryChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bar Chart: Top Spenders -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="bi bi-bar-chart"></i> Top Spenders
+                </h6>
+                <canvas id="topSpendersChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Line Chart: Spending Trends -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="bi bi-graph-up"></i> Spending Trends
+                </h6>
+                <canvas id="spendingTrendChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Quick Actions -->
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-plus-circle"></i> Quick Actions
+                </h5>
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{% url 'groups:create' %}" class="btn btn-primary">
+                        <i class="bi bi-people"></i> Create Group
+                    </a>
+                    <a href="{% url 'groups:list' %}" class="btn btn-outline-primary">
+                        <i class="bi bi-list"></i> View All Groups
+                    </a>
+                    <a href="{% url 'settlements:balance_summary' %}" class="btn btn-outline-success">
+                        <i class="bi bi-wallet2"></i> View Balance
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Your Groups -->
+    <div class="col-md-8">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-people-fill"></i> Your Groups
+                </h5>
+                
+                {% if groups %}
+                    <div class="list-group mt-3">
+                        {% for membership in groups %}
+                            <a href="{% url 'groups:detail' membership.group.group_id %}" 
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ membership.group.name }}</h6>
+                                    <small>{{ membership.group.get_total_members }} members</small>
+                                </div>
+                                <p class="mb-1 text-muted">{{ membership.group.description|truncatewords:10 }}</p>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-inbox display-1 text-muted"></i>
+                        <p class="text-muted mt-3">You haven't joined any groups yet.</p>
+                        <a href="{% url 'groups:create' %}" class="btn btn-primary">Create Your First Group</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Chart colors
+const chartColors = [
+    'rgba(255, 99, 132, 0.7)',
+    'rgba(54, 162, 235, 0.7)',
+    'rgba(255, 206, 86, 0.7)',
+    'rgba(75, 192, 192, 0.7)',
+    'rgba(153, 102, 255, 0.7)',
+    'rgba(255, 159, 64, 0.7)',
+];
+
+// 1. PIE CHART - Expense by Category
+var categoryCtx = document.getElementById('expenseCategoryChart').getContext('2d');
+new Chart(categoryCtx, {
+    type: 'doughnut',
+    data: {
+        labels: {{ categories|safe }},
+        datasets: [{
+            label: 'Expenses by Category',
+            data: {{ category_amounts|safe }},
+            backgroundColor: chartColors,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: { position: 'bottom', labels: { padding: 10, font: { size: 10 } } }
+        }
+    }
+});
+
+// 2. BAR CHART - Top Spenders
+var spendersCtx = document.getElementById('topSpendersChart').getContext('2d');
+new Chart(spendersCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ spender_names|safe }},
+        datasets: [{
+            label: 'Amount Spent',
+            data: {{ spender_amounts|safe }},
+            backgroundColor: chartColors,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        indexAxis: 'x',
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: { y: { beginAtZero: true, ticks: { font: { size: 10 } } } },
+        plugins: { legend: { display: false } }
+    }
+});
+
+// 3. LINE CHART - Spending Trends
+var trendCtx = document.getElementById('spendingTrendChart').getContext('2d');
+new Chart(trendCtx, {
+    type: 'line',
+    data: {
+        labels: {{ months|safe }},
+        datasets: [{
+            label: 'Monthly Spending',
+            data: {{ spending|safe }},
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2,
+            pointRadius: 3
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: { 
+            y: { 
+                beginAtZero: true,
+                ticks: { font: { size: 10 } }
+            }
+        },
+        plugins: { legend: { position: 'top', labels: { font: { size: 10 } } } }
+    }
+});
+</script>
+{% endblock %}
+

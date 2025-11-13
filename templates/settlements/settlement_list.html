@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Settlements - {{ group.name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="bi bi-receipt"></i> Settlements - {{ group.name }}</h2>
+        <a href="{% url 'settlements:group_balance' group.group_id %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Balance
+        </a>
+        <a href="{% url 'settlements:optimize' group.group_id %}" class="btn btn-primary">
+            <i class="bi bi-lightning"></i> Regenerate Optimized Plan
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Pending Settlements -->
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0">
+                    <i class="bi bi-hourglass-split"></i> Pending Settlements ({{ pending_settlements.count }})
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if pending_settlements %}
+                    <div class="list-group">
+                        {% for settlement in pending_settlements %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">
+                                        <i class="bi bi-person"></i> {{ settlement.payer.name }} 
+                                        <span class="text-muted">→</span>
+                                        <i class="bi bi-person"></i> {{ settlement.payee.name }}
+                                    </h6>
+                                    <small class="text-muted">
+                                        Created: {{ settlement.created_at|date:"M d, Y" }}
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    <strong class="d-block text-success">
+                                        {{ settlement.amount }} {{ group.currency }}
+                                    </strong>
+                                    {% if request.user == settlement.payer or request.user == settlement.payee %}
+                                    <form method="post" action="{% url 'settlements:mark_complete' settlement.settlement_id %}" 
+                                          style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-success mt-2" 
+                                                onclick="return confirm('Mark this settlement as paid?')">
+                                            <i class="bi bi-check"></i> Paid
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-check-circle display-4 text-success mb-3"></i>
+                        <p class="text-muted">No pending settlements!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Completed Settlements -->
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success">
+                <h5 class="mb-0">
+                    <i class="bi bi-check-circle"></i> Completed Settlements ({{ completed_settlements.count }})
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if completed_settlements %}
+                    <div class="list-group">
+                        {% for settlement in completed_settlements %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1 text-muted">
+                                        <i class="bi bi-person"></i> {{ settlement.payer.name }} 
+                                        <span>→</span>
+                                        <i class="bi bi-person"></i> {{ settlement.payee.name }}
+                                    </h6>
+                                    <small class="text-muted">
+                                        Completed: {{ settlement.completed_at|date:"M d, Y" }}
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    <strong class="text-success">
+                                        {{ settlement.amount }} {{ group.currency }}
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <p class="text-muted">No completed settlements yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Account - SplitEase{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card shadow border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">
+                    <i class="bi bi-exclamation-triangle"></i> Delete Account
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <h5><i class="bi bi-exclamation-circle"></i> Warning</h5>
+                    <p class="mb-0">
+                        Deleting your account is <strong>permanent</strong> and cannot be undone. 
+                        All your data will be permanently deleted.
+                    </p>
+                </div>
+
+                <div class="alert alert-info">
+                    <h6><strong>The following will be deleted:</strong></h6>
+                    <ul class="mb-0">
+                        <li>Your profile and personal information</li>
+                        <li>Your account settings</li>
+                        <li>Login credentials</li>
+                        <li>Your account will be removed from all groups</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-secondary">
+                    <p class="mb-0">
+                        <strong>Note:</strong> Your expense records will remain in the system for audit purposes, 
+                        but will be disassociated from your account.
+                    </p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger btn-lg" 
+                                onclick="return confirm('Are you absolutely sure? This is permanent!')">
+                            <i class="bi bi-trash"></i> Yes, Delete My Account
+                        </button>
+                        <a href="{% url 'users:profile' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancel & Go Back
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

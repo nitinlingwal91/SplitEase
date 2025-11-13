@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Expense Detail - SplitEase{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card shadow">
+            <div class="card-body">
+                <h3 class="mb-4">
+                    <i class="bi bi-receipt-cutoff"></i> Expense Details
+                </h3>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Description:</strong>
+                        <p>{{ expense.description }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Amount:</strong>
+                        <p class="fs-4 text-primary">{{ expense.amount }} {{ expense.group.currency }}</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Date:</strong>
+                        <p>{{ expense.date|date:"F d, Y" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Category:</strong>
+                        <p>
+                            {% if expense.category %}
+                                <span class="badge bg-secondary">{{ expense.category.name }}</span>
+                            {% else %}
+                                <span class="text-muted">Uncategorized</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Paid By:</strong>
+                        <p>{{ expense.payer.name }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Split Type:</strong>
+                        <p>{{ expense.get_split_type_display }}</p>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <h5 class="mb-3">Participants & Shares</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Participant</th>
+                                <th>Share Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for participant in participants %}
+                            <tr>
+                                <td>{{ participant.user.name }}</td>
+                                <td>{{ participant.share_amount }} {{ expense.group.currency }}</td>
+                                <td>
+                                    {% if participant.is_settled %}
+                                        <span class="badge bg-success">Settled</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Pending</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{% url 'expenses:list' expense.group.group_id %}" 
+                       class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Expenses
+                    </a>
+                    <a href="{% url 'groups:detail' expense.group.group_id %}" 
+                       class="btn btn-outline-secondary">
+                        <i class="bi bi-people"></i> Back to Group
+                    </a>
+                    {% if expense.payer == request.user %}
+                    <a href="{% url 'expenses:delete' expense.expense_id %}" 
+                       class="btn btn-danger float-end">
+                        <i class="bi bi-trash"></i> Delete Expense
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}Optimize Settlements - {{ group.name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="bi bi-lightning"></i> Optimize Settlements - {{ group.name }}</h2>
+        <p class="text-muted">Review and confirm the optimized settlement plan.</p>
+        <a href="{% url 'settlements:group_balance' group.group_id %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Balance
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card shadow">
+            <div class="card-body">
+                <h4 class="card-title mb-4">
+                    <i class="bi bi-check2-square"></i> Optimized Settlement Plan
+                </h4>
+                
+                {% if settlements %}
+                    <!-- Optimization Summary -->
+                    <div class="alert alert-success mb-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6><i class="bi bi-lightning-charge"></i> Optimization Result</h6>
+                                <p class="mb-0">
+                                    <strong>{{ total_transactions }}</strong> transactions needed to settle all debts
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6><i class="bi bi-info-circle"></i> How it Works</h6>
+                                <p class="mb-0 small">
+                                    Matches largest debtors with largest creditors to minimize payments
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Settlement List -->
+                    <div class="mb-4">
+                        <h5 class="mb-3">Settlement Transactions:</h5>
+                        <div class="list-group">
+                            {% for settlement in settlements %}
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-md-1 text-center">
+                                        <span class="badge bg-primary rounded-pill">{{ forloop.counter }}</span>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <h6 class="mb-1">
+                                            <i class="bi bi-person-circle"></i> {{ settlement.payer.name }}
+                                        </h6>
+                                        <small class="text-muted">Pays</small>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <i class="bi bi-arrow-right text-primary" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">
+                                                    <i class="bi bi-person-circle"></i> {{ settlement.payee.name }}
+                                                </h6>
+                                                <small class="text-muted">Receives</small>
+                                            </div>
+                                            <div class="text-end">
+                                                <strong class="text-success" style="font-size: 1.2rem;">
+                                                    {{ settlement.amount }} {{ group.currency }}
+                                                </strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Total Amount -->
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Total Amount to Settle</h6>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <h5 class="text-success">
+                                        {% widthratio total_amount 1 1 %} {{ group.currency }}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2">
+                        <form method="post" id="confirmForm">
+                            {% csrf_token %}
+                            <input type="hidden" name="confirm" value="true">
+                            <button type="submit" class="btn btn-primary btn-lg" onclick="return confirmSettlements()">
+                                <i class="bi bi-check-circle"></i> Confirm & Create These Settlements
+                            </button>
+                        </form>
+                        <a href="{% url 'settlements:group_balance' group.group_id %}" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                    
+                    <!-- Info Box -->
+                    <div class="alert alert-info mt-4">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Note:</strong> Once confirmed, these settlements will replace any existing pending settlements. 
+                        Members can then mark payments as complete.
+                    </div>
+                
+                {% else %}
+                    <!-- No Settlements Needed -->
+                    <div class="alert alert-success" role="alert">
+                        <i class="bi bi-check-circle"></i>
+                        <h4>All Balances Settled!</h4>
+                        <p class="mb-0">No transactions needed. Everyone is square.</p>
+                    </div>
+                    <a href="{% url 'groups:detail' group.group_id %}" class="btn btn-primary">
+                        <i class="bi bi-arrow-left"></i> Back to Group
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmSettlements() {
+    return confirm(
+        'Are you sure you want to create these {{ total_transactions }} settlements?\n\n' +
+        'This will replace any existing pending settlements.'
+    );
+}
+</script>
+{% endblock %}

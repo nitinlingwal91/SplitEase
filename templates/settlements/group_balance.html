@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Group Balance - {{ group.name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="bi bi-wallet2"></i> Balance Summary - {{ group.name }}</h2>
+        <a href="{% url 'groups:detail' group.group_id %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Group
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- You Owe -->
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="bi bi-arrow-up-right"></i> You Owe</h5>
+            </div>
+            <div class="card-body">
+                {% if summary.owes %}
+                    <div class="list-group">
+                        {% for balance in summary.owes %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ balance.user2.name }}</span>
+                                <strong class="text-danger">{{ balance.amount }} {{ group.currency }}</strong>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-3 p-3 bg-light rounded">
+                        <strong>Total You Owe:</strong>
+                        <span class="float-end text-danger">{{ summary.total_owes }} {{ group.currency }}</span>
+                    </div>
+                {% else %}
+                    <p class="text-muted"><i class="bi bi-check-circle"></i> You don't owe anyone!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- You Are Owed -->
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-arrow-down-left"></i> You Are Owed</h5>
+            </div>
+            <div class="card-body">
+                {% if summary.owed %}
+                    <div class="list-group">
+                        {% for balance in summary.owed %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ balance.user1.name }}</span>
+                                <strong class="text-success">{{ balance.amount }} {{ group.currency }}</strong>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-3 p-3 bg-light rounded">
+                        <strong>Total You Are Owed:</strong>
+                        <span class="float-end text-success">{{ summary.total_owed }} {{ group.currency }}</span>
+                    </div>
+                {% else %}
+                    <p class="text-muted"><i class="bi bi-check-circle"></i> No one owes you!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Net Balance</h5>
+                {% if summary.net_balance > 0 %}
+                    <h4 class="text-success">
+                        <i class="bi bi-plus-circle"></i> +{{ summary.net_balance }} {{ group.currency }} (You are owed)
+                    </h4>
+                {% elif summary.net_balance < 0 %}
+                    <h4 class="text-danger">
+                        <i class="bi bi-dash-circle"></i> {{ summary.net_balance }} {{ group.currency }} (You owe)
+                    </h4>
+                {% else %}
+                    <h4 class="text-muted">
+                        <i class="bi bi-check-circle"></i> Balanced (All settled)
+                    </h4>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <a href="{% url 'settlements:optimize' group.group_id %}" class="btn btn-primary">
+            <i class="bi bi-lightning"></i> Optimize Settlements
+        </a>
+    </div>
+</div>
+{% endblock %}
