@@ -33,5 +33,36 @@ python -m venv .venv
 # On Windows use 
 .venv\Scripts\activate
 
+3. Install dependencies:
+   pip install -r requirements.txt
+
+4. Setup environment variables by copying `.env.example` to `.env` and modifying it.
+
+5. Run migrations:
+   python manage.py migrate
+
+
+6. Run the development server:
+   python manage.py runserver
+
+## Usage
+
+- Register a new user or log in.
+- Create groups and add members.
+- Log expenses and view settlements.
+- Chat in real-time with group members.
+- Track budgets with alerts.
+
+## Contributing
+
+Contributions are welcome! Please fork the project and create pull requests.
+
+## License
+
+This project is licensed under the MIT License.
+
+
+
+
 
 
