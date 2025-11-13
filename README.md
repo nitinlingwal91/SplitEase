@@ -26,3 +26,12 @@ SplitEase is a modern, Django-based web application designed to simplify expense
 ## Installation and Setup
 
 1. Clone the repository:
+https://github.com/nitinlingwal91/SplitEase.git
+ 
+2. Create a virtual environment and activate it:
+python -m venv .venv
+# On Windows use 
+.venv\Scripts\activate
+
+
+
