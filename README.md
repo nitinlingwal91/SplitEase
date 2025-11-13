@@ -158,15 +158,7 @@ python manage.py createsuperuser
 
 Follow prompts to enter username, email, and password.
 
-### Step 7: Collect Static Files (Production)
-
-For production deployment:
-
-```bash
-python manage.py collectstatic --noinput
-```
-
-### Step 8: Run the Development Server
+### Step 7: Run the Development Server
 
 Start the local development server:
 
@@ -274,97 +266,11 @@ SplitEase/
    - Create budgets for spending limits
    - Set category-wise budgets
    - Receive alerts when limits approached
-
----
-
-## 🔌 API Endpoints
-
-### User Endpoints
-```
-GET/POST   /users/register/           - User registration
-GET/POST   /users/login/              - User login
-GET        /users/logout/             - User logout
-GET/POST   /users/profile/            - User profile
-GET/POST   /users/profile/edit/       - Edit profile
-POST       /users/profile/delete/     - Delete account
-```
-
-### Group Endpoints
-```
-GET        /groups/                   - List groups
-POST       /groups/create/            - Create group
-GET        /groups/<id>/              - Group detail
-POST       /groups/<id>/edit/         - Edit group
-POST       /groups/<id>/delete/       - Delete group
-POST       /groups/<id>/add_member/   - Add member
-```
-
-### Expense Endpoints
-```
-GET        /expenses/list/<group_id>/ - List expenses
-POST       /expenses/add/<group_id>/  - Add expense
-GET        /expenses/detail/<id>/     - Expense detail
-POST       /expenses/edit/<id>/       - Edit expense
-POST       /expenses/delete/<id>/     - Delete expense
-```
-
-### Settlement Endpoints
-```
-GET        /settlements/group/<id>/   - View balances
-GET        /settlements/optimize/<id>/ - Optimize settlements
-GET        /settlements/list/<id>/    - Settlement history
-POST       /settlements/confirm/      - Confirm settlement
-```
-
-### Chat Endpoints
-```
-GET        /chat/group/<id>/          - Chat interface
-GET        /chat/messages/<id>/       - Get messages (JSON)
-POST       /chat/send/<id>/           - Send message
-GET        /chat/online/<id>/         - Online members
-```
-
-### Budget Endpoints
-```
-GET        /budgets/group/<id>/       - List budgets
-GET        /budgets/detail/<id>/      - Budget detail
-POST       /budgets/create/<id>/      - Create budget
-```
-
----
-
-## 🤝 Contributing
-
-Contributions are always welcome! Here's how you can help:
-
-1. **Fork the repository** - Click "Fork" on GitHub
-2. **Clone your fork** - `git clone https://github.com/YOUR_USERNAME/SplitEase.git`
-3. **Create feature branch** - `git checkout -b feature/AmazingFeature`
-4. **Make changes** - Add your code/fixes
-5. **Commit changes** - `git commit -m "Add AmazingFeature"`
-6. **Push to branch** - `git push origin feature/AmazingFeature`
-7. **Open Pull Request** - Submit PR on GitHub
-
-### Contribution Guidelines
-- Follow existing code style
-- Add comments for complex logic
-- Test changes before submitting
-- Update documentation if needed
-
 ---
 
 ## 📜 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-**MIT License Summary:**
-- ✅ You can use this project commercially
-- ✅ You can modify the code
-- ✅ You can distribute copies
-- ✅ You can use privately
-- ❌ You cannot hold the author liable
-- ❌ You cannot claim warranty
-
+This project is licensed under the **MIT License** -
 ---
 
 ## 📞 Contact & Support
@@ -372,79 +278,8 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 For questions, feedback, or support:
 
 - **GitHub Issues** - [Report Issue](https://github.com/nitinlingwal91/SplitEase/issues)
-- **Email** - nitinlingwal91@gmail.com (replace with your email)
+- **Email** - nitinlingwal91@gmail.com
 - **GitHub Discussions** - [Start Discussion](https://github.com/nitinlingwal91/SplitEase/discussions)
-
----
-
-## 🔧 Troubleshooting
-
-### Issue: `ModuleNotFoundError: No module named 'django'`
-
-**Solution:**
-```bash
-# Ensure virtual environment is activated
-source .venv/bin/activate  # Linux/Mac
-.venv\Scripts\activate     # Windows
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### Issue: Database migration errors
-
-**Solution:**
-```bash
-# Delete existing database
-rm db.sqlite3
-
-# Run fresh migrations
-python manage.py makemigrations
-python manage.py migrate
-```
-
-### Issue: Static files not loading in production
-
-**Solution:**
-```bash
-# Collect static files
-python manage.py collectstatic --noinput
-
-# Check STATIC_ROOT in settings.py
-```
-
-### Issue: Email not sending
-
-**Solution:**
-- Check `.env` file has correct EMAIL_HOST_USER and EMAIL_HOST_PASSWORD
-- For Gmail, use [App Passwords](https://myaccount.google.com/apppasswords) not regular password
-- Ensure EMAIL_USE_TLS=True
-
-### Issue: WebSocket chat not working
-
-**Solution:**
-```bash
-# Install channels requirements
-pip install channels channels-redis
-
-# Restart development server
-python manage.py runserver
-```
-
-### Issue: Unable to push to GitHub
-
-**Solution:**
-```bash
-# Check remote URL
-git remote -v
-
-# Update remote if needed
-git remote set-url origin https://github.com/YOUR_USERNAME/SplitEase.git
-
-# Push with branch name
-git push -u origin main
-```
-
 ---
 
 ## 📚 Useful Resources
@@ -463,7 +298,6 @@ git push -u origin main
 - Django community for excellent framework
 - Bootstrap team for UI components
 - Contributors and users for feedback
-
 ---
 
 **Last Updated:** November 13, 2025  
@@ -471,5 +305,6 @@ git push -u origin main
 **Status:** Active Development
 
 © 2025 SplitEase. All rights reserved.
+
 
 
