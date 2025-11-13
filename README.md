@@ -20,54 +20,16 @@ SplitEase is a modern, Django-based web application designed to simplify expense
 
 ## ✨ Features
 
-- **User Management**
-  - User registration and authentication with email verification
-  - Case-insensitive email login (supports uppercase and lowercase)
-  - Secure password hashing with Django built-in system
-  - Password reset via email with secure links
-  - "Remember Me" login functionality
-  - User profile management with photos and bio
-
-- **Group Management**
-  - Create and manage expense groups
-  - Add/remove group members
-  - Role-based access control (owner, member)
-  - Group settings and preferences
-  - Delete group feature (owner only)
-
-- **Expense Tracking**
-  - Log expenses with category classification
-  - Multiple split methods (equal, itemized, percentage)
-  - Edit and delete expenses
-  - Expense history and filtering
-  - Category-based organization
-
-- **Settlement Management**
-  - Automatic balance calculation
-  - Optimized settlement suggestions
-  - Settlement history tracking
-  - Mark settlements as complete
-  - Payment confirmation
-
-- **Real-time Features**
-  - Real-time group chat with WebSockets
-  - Online member tracking
-  - Message persistence in database
-  - Light/Dark mode support for chat
-
-- **Budget Management**
-  - Create budgets for defined periods (monthly, quarterly, yearly)
-  - Set category-wise budget limits
-  - Real-time spending tracking
-  - Visual progress indicators with color coding
-  - Smart alerts when spending reaches thresholds
-
-- **Additional Features**
-  - Multi-language support (English, Spanish, French, Hindi, Portuguese)
-  - Mobile responsive design
-  - Dark mode support
-  - XSS and SQL injection protection
-  - Session management
+- User registration and authentication with email verification.
+- Group creation and management with role-based access.
+- Expense logging with flexible splitting methods (equal, itemized, percentage).
+- Automatic balance and settlement calculation to minimize transactions.
+- Real-time group chat powered by WebSockets.
+- Budget tracking with alerts to keep spending in check.
+- Multi-language support for global users.
+- User profile management with optional information and photo.
+- Secure password reset workflow via email.
+- Responsive design including light and dark mode themes.
 
 ---
 
@@ -518,3 +480,4 @@ git push -u origin main
 **Status:** Active Development
 
 © 2025 SplitEase. All rights reserved.
+
