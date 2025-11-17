@@ -57,6 +57,8 @@ SplitEase is a modern, Django-based web application designed to simplify expense
 - **django-filter 23.2** - Query filtering
 ---
 
+![Alt text](images/screenshot.png)
+
 ## 📦 Prerequisites
 
 Before you begin, ensure you have the following installed:
@@ -302,6 +304,7 @@ For questions, feedback, or support:
 
 
 © 2025 SplitEase. All rights reserved.
+
 
 
 
