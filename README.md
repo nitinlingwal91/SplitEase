@@ -300,11 +300,10 @@ For questions, feedback, or support:
 - Contributors and users for feedback
 ---
 
-**Last Updated:** November 13, 2025  
-**Version:** 1.0.0  
-**Status:** Active Development
 
 © 2025 SplitEase. All rights reserved.
+
+
 
 
 
