@@ -59,6 +59,9 @@ SplitEase is a modern, Django-based web application designed to simplify expense
 
 ## [View all project images]
 ![Alt text](media/images)
+(media/images/Screenshot(98))
+---
+(media/images/Screenshot(97))
 
 ## 📦 Prerequisites
 
@@ -305,6 +308,7 @@ For questions, feedback, or support:
 
 
 © 2025 SplitEase. All rights reserved.
+
 
 
 
