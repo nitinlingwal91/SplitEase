@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from users.models import User
 from groups.models import Group
-
+from django.core.exceptions import ValidationError
 
 class Balance(models.Model):
     balance_id = models.AutoField(primary_key=True)
@@ -19,6 +19,17 @@ class Balance(models.Model):
     def __str__(self):
         return f"{self.user1.name} owes {self.user2.name}: {self.amount}"
 
+    def clean(self):
+        """Validate settlement data"""
+        if self.payer == self.payee:
+            raise ValidationError("Payer and payee must be different.")
+        if self.amount <= 0:
+            raise ValidationError("Settlement amount must be positive.")
+
+    def save(self, *args, **kwargs):
+        """Override save to call clean"""
+        self.full_clean()
+        super().save(*args, **kwargs)
 
 class Settlement(models.Model):
     settlement_id = models.AutoField(primary_key=True)
@@ -37,3 +48,16 @@ class Settlement(models.Model):
     def __str__(self):
         return f"{self.payer.name} → {self.payee.name}: {self.amount}"
 
+
+    def clean(self):
+        """Validate settlement data"""
+        super().clean()
+        if self.payer_id and self.payee_id and self.payer_id == self.payee_id:
+            raise ValidationError("Payer and payee must be different.")
+        if self.amount and self.amount <= 0:
+            raise ValidationError("Settlement amount must be positive.")
+    
+    def save(self, *args, **kwargs):
+        """Override save to call clean"""
+        self.full_clean()
+        super().save(*args, **kwargs)

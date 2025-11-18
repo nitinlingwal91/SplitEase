@@ -23,6 +23,7 @@ class ExpenseAdmin(admin.ModelAdmin):
 
 @admin.register(ExpenseParticipant)
 class ExpenseParticipantAdmin(admin.ModelAdmin):
-    list_display = ['expense', 'user', 'share_amount', 'is_settled']
+    list_display = ['expense', 'user', 'amount', 'is_settled']
     list_filter = ['is_settled']
+
 

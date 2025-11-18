@@ -3,7 +3,7 @@ from django.utils import timezone
 from decimal import Decimal
 from users.models import User
 from groups.models import Group
-
+from django.core.exceptions import ValidationError
 
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True)
@@ -41,7 +41,19 @@ class Expense(models.Model):
 
     def __str__(self):
         return f"{self.description} - {self.amount}"
+    
+    def clean(self):
+        """Validate expense data"""
+        if not self.description or self.description.strip() == '':
+            raise ValidationError('Description is required.')
+        if self.amount <= 0:
+            raise ValidationError('Amount must be positive and greater than zero.')
 
+    def save(self, *args, **kwargs):
+        """Override save to call clean"""
+        self.full_clean()
+        super().save(*args, **kwargs)
+    
     def calculate_equal_split(self, num_participants):
         if num_participants == 0:
             return Decimal('0.00')
@@ -52,7 +64,7 @@ class ExpenseParticipant(models.Model):
     participant_id = models.AutoField(primary_key=True)
     expense = models.ForeignKey(Expense, on_delete=models.CASCADE, related_name='participants')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='expense_participations')
-    share_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
     share_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     is_settled = models.BooleanField(default=False)
 
@@ -61,4 +73,4 @@ class ExpenseParticipant(models.Model):
         unique_together = ['expense', 'user']
 
     def __str__(self):
-        return f"{self.user.name} - {self.share_amount}"
+        return f"{self.user.name} - {self.amount}"
